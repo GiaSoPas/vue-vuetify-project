@@ -21,3 +21,19 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Optional: local development files
+.env
+.env.development
+.env.production
+
+# Optional: coverage directory
+/coverage
+
+# Optional: Cypress e2e testing
+/cypress/videos/
+/cypress/screenshots/
+
+# Optional: Temporary files
+*.tmp
+*.temp
