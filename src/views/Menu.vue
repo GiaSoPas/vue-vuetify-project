@@ -321,6 +321,8 @@
 </template>
 
 <script>
+import { menuApi } from '@/services/api'
+
 export default {
   name: 'MenuView',
 
@@ -349,39 +351,9 @@ export default {
       { text: 'Недоступно', value: false }
     ],
 
-    // Тестовые данные для категорий
-    categories: [
-      { id: 1, name: 'Салаты', description: 'Свежие салаты' },
-      { id: 2, name: 'Супы', description: 'Первые блюда' },
-      { id: 3, name: 'Горячее', description: 'Вторые блюда' },
-      { id: 4, name: 'Напитки', description: 'Напитки и коктейли' }
-    ],
+    categories: [],
+    items: [],
 
-    // Тестовые данные для блюд
-    items: [
-      {
-        id: 1,
-        name: 'Цезарь с курицей',
-        description: 'Классический салат с куриным филе',
-        categoryId: 1,
-        price: 590,
-        cookingTime: 15,
-        available: true,
-        image: null
-      },
-      {
-        id: 2,
-        name: 'Борщ',
-        description: 'Традиционный борщ со сметаной',
-        categoryId: 2,
-        price: 420,
-        cookingTime: 30,
-        available: true,
-        image: null
-      }
-    ],
-
-    // Объект для редактирования блюда
     editedItem: {
       id: null,
       name: '',
@@ -394,7 +366,6 @@ export default {
       imageFile: null
     },
 
-    // Объект для редактирования категории
     editedCategory: {
       id: null,
       name: '',
@@ -418,7 +389,6 @@ export default {
         )
       }
 
-      // Добавляем название категории для отображения в таблице
       return filtered.map(item => ({
         ...item,
         categoryName: this.getCategoryName(item.categoryId)
@@ -432,7 +402,32 @@ export default {
     }
   },
 
+  async created() {
+    await this.loadData()
+  },
+
   methods: {
+    async loadData() {
+      this.loading = true
+      try {
+        const [categoriesResponse, itemsResponse] = await Promise.all([
+          menuApi.getCategories(),
+          menuApi.getMenuItems({
+            categoryIds: this.selectedCategories,
+            status: this.selectedStatus,
+            search: this.search
+          })
+        ])
+        this.categories = categoriesResponse.data.categories
+        this.items = itemsResponse.data.items
+      } catch (error) {
+        console.error('Error loading menu data:', error)
+        // TODO: Show error notification to user
+      } finally {
+        this.loading = false
+      }
+    },
+
     formatCurrency(value) {
       return new Intl.NumberFormat('ru-RU', {
         style: 'currency',
@@ -450,16 +445,23 @@ export default {
       this.showItemDialog = true
     },
 
-    deleteItem(item) {
+    async deleteItem(item) {
       this.itemToDelete = item
       this.showDeleteDialog = true
     },
 
-    confirmDelete() {
+    async confirmDelete() {
       if (this.itemToDelete) {
-        const index = this.items.findIndex(item => item.id === this.itemToDelete.id)
-        if (index !== -1) {
-          this.items.splice(index, 1)
+        try {
+          await menuApi.deleteMenuItem(this.itemToDelete.id)
+          const index = this.items.findIndex(item => item.id === this.itemToDelete.id)
+          if (index !== -1) {
+            this.items.splice(index, 1)
+          }
+          // TODO: Show success notification
+        } catch (error) {
+          console.error('Error deleting item:', error)
+          // TODO: Show error notification
         }
       }
       this.showDeleteDialog = false
@@ -496,44 +498,80 @@ export default {
 
     async handleImageUpload(file) {
       if (!file) return
-
-      // В реальном приложении здесь будет загрузка файла на сервер
-      // и получение URL изображения
+      this.editedItem.imageFile = file
       this.editedItem.image = URL.createObjectURL(file)
     },
 
-    saveItem() {
-      if (this.editedItem.id) {
-        // Обновление существующего блюда
-        const index = this.items.findIndex(item => item.id === this.editedItem.id)
-        if (index !== -1) {
-          this.items.splice(index, 1, { ...this.editedItem })
+    async saveItem() {
+      try {
+        if (this.editedItem.id) {
+          const response = await menuApi.updateMenuItem(this.editedItem.id, this.editedItem)
+          const index = this.items.findIndex(item => item.id === this.editedItem.id)
+          if (index !== -1) {
+            this.items.splice(index, 1, response.data)
+          }
+        } else {
+          const response = await menuApi.createMenuItem(this.editedItem)
+          this.items.push(response.data)
         }
-      } else {
-        // Добавление нового блюда
-        this.items.push({
-          ...this.editedItem,
-          id: Date.now() // В реальном приложении ID будет генерироваться на сервере
-        })
+        // TODO: Show success notification
+        this.closeItemDialog()
+      } catch (error) {
+        console.error('Error saving item:', error)
+        // TODO: Show error notification
       }
-      this.closeItemDialog()
     },
 
-    saveCategory() {
-      if (this.editedCategory.id) {
-        // Обновление существующей категории
-        const index = this.categories.findIndex(cat => cat.id === this.editedCategory.id)
-        if (index !== -1) {
-          this.categories.splice(index, 1, { ...this.editedCategory })
+    async saveCategory() {
+      try {
+        if (this.editedCategory.id) {
+          const response = await menuApi.updateCategory(this.editedCategory.id, this.editedCategory)
+          const index = this.categories.findIndex(cat => cat.id === this.editedCategory.id)
+          if (index !== -1) {
+            this.categories.splice(index, 1, response.data)
+          }
+        } else {
+          const response = await menuApi.createCategory(this.editedCategory)
+          this.categories.push(response.data)
         }
-      } else {
-        // Добавление новой категории
-        this.categories.push({
-          ...this.editedCategory,
-          id: Date.now() // В реальном приложении ID будет генерироваться на сервере
-        })
+        // TODO: Show success notification
+        this.closeCategoryDialog()
+      } catch (error) {
+        console.error('Error saving category:', error)
+        // TODO: Show error notification
       }
-      this.closeCategoryDialog()
+    },
+
+    async deleteCategory(category) {
+      try {
+        await menuApi.deleteCategory(category.id)
+        const index = this.categories.findIndex(cat => cat.id === category.id)
+        if (index !== -1) {
+          this.categories.splice(index, 1)
+        }
+        // TODO: Show success notification
+      } catch (error) {
+        console.error('Error deleting category:', error)
+        // TODO: Show error notification
+      }
+    }
+  },
+
+  watch: {
+    selectedCategories: {
+      handler() {
+        this.loadData()
+      }
+    },
+    selectedStatus: {
+      handler() {
+        this.loadData()
+      }
+    },
+    search: {
+      handler() {
+        this.loadData()
+      }
     }
   }
 }
