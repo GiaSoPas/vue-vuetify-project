@@ -16,9 +16,18 @@
             <v-btn
               color="primary"
               @click="showStatusDialog = true"
+              class="mr-2"
             >
               <v-icon left>mdi-pencil</v-icon>
               Изменить статус
+            </v-btn>
+            <v-btn
+              color="success"
+              :disabled="order.status !== 'ready'"
+              @click="sendToPayment"
+            >
+              <v-icon left>mdi-cash-register</v-icon>
+              Отправить на оплату
             </v-btn>
           </v-card-title>
 
@@ -242,17 +251,6 @@
             </v-list>
 
             <v-divider class="my-4"></v-divider>
-
-            <v-btn
-              block
-              color="success"
-              class="mb-2"
-              :disabled="!canFinishOrder"
-              @click="finishOrder"
-            >
-              <v-icon left>mdi-cash-register</v-icon>
-              Отправить на оплату
-            </v-btn>
 
             <v-btn
               block
@@ -581,10 +579,24 @@ export default {
       this.itemToDelete = null
     },
 
-    finishOrder() {
+    sendToPayment() {
+      // Обновляем статус заказа на завершенный
       this.order.status = 'completed'
-      //  здесь будет API-запрос для закрытия заказа
-      this.$router.push('/orders')
+      
+      // Обновляем статусы всех блюд на "подано"
+      this.order.items.forEach(item => {
+        item.status = 'served'
+      })
+
+      // Здесь будет API-запрос для обновления статуса заказа
+      // После успешного обновления переходим на страницу заказов
+      this.$router.push({
+        path: '/orders',
+        query: { 
+          status: 'completed',
+          message: 'Заказ успешно отправлен на оплату'
+        }
+      })
     }
   },
 

@@ -278,6 +278,24 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Снэкбар для уведомлений -->
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      timeout="3000"
+    >
+      {{ snackbar.text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          text
+          v-bind="attrs"
+          @click="snackbar.show = false"
+        >
+          Закрыть
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -294,17 +312,11 @@ export default {
     selectedTables: [],
     showDialog: false,
     selectedOrder: null,
-
-    // Заголовки таблицы
-    headers: [
-      { text: 'ID', align: 'start', value: 'id' },
-      { text: 'Столик', value: 'table' },
-      { text: 'Время', value: 'createdAt' },
-      { text: 'Статус', value: 'status' },
-      { text: 'Сумма', value: 'total' },
-      { text: 'Действия', value: 'actions', sortable: false }
-    ],
-
+    snackbar: {
+      show: false,
+      text: '',
+      color: 'success'
+    },
     // Опции для фильтров
     statusOptions: [
       { text: 'Новый', value: 'new' },
@@ -312,43 +324,54 @@ export default {
       { text: 'Готов', value: 'ready' },
       { text: 'Завершён', value: 'completed' }
     ],
-
-    tableOptions: [
-      { text: 'Столик 1', value: 1 },
-      { text: 'Столик 2', value: 2 },
-      { text: 'Столик 3', value: 3 },
-      { text: 'Столик 4', value: 4 },
-      { text: 'Столик 5', value: 5 }
+    tableOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    // Заголовки таблицы
+    headers: [
+      { text: '№', value: 'id', width: '100px' },
+      { text: 'Столик', value: 'table', width: '100px' },
+      { text: 'Время', value: 'createdAt', width: '150px' },
+      { text: 'Статус', value: 'status', width: '120px' },
+      { text: 'Сумма', value: 'total', width: '120px' },
+      { text: 'Действия', value: 'actions', sortable: false, width: '100px' }
     ],
-
-    // Тестовые данные заказов
     orders: [
       {
         id: 1001,
         table: 1,
-        createdAt: '2025-03-16T14:30:00',
-        status: 'completed',
-        total: 2450,
+        createdAt: '2024-03-16T14:30:00',
+        status: 'new',
         waiter: 'Анна Петрова',
         guests: 2,
+        total: 1500,
         items: [
           { id: 1, name: 'Цезарь с курицей', quantity: 1, price: 590 },
-          { id: 2, name: 'Борщ', quantity: 2, price: 420 },
-          { id: 3, name: 'Морс', quantity: 2, price: 150 }
+          { id: 2, name: 'Борщ', quantity: 2, price: 420 }
         ]
       },
       {
         id: 1002,
         table: 3,
-        createdAt: '2025-03-16T15:00:00',
+        createdAt: '2024-03-16T15:00:00',
         status: 'in_progress',
-        total: 3800,
-        waiter: 'Иван Сидоров',
+        waiter: 'Иван Иванов',
         guests: 4,
+        total: 3200,
         items: [
-          { id: 1, name: 'Стейк Рибай', quantity: 2, price: 1500 },
-          { id: 2, name: 'Картофель фри', quantity: 2, price: 200 },
-          { id: 3, name: 'Кола', quantity: 2, price: 150 }
+          { id: 3, name: 'Стейк Рибай', quantity: 2, price: 1500 },
+          { id: 4, name: 'Морс', quantity: 2, price: 150 }
+        ]
+      },
+      {
+        id: 1003,
+        table: 5,
+        createdAt: '2024-03-16T15:30:00',
+        status: 'ready',
+        waiter: 'Мария Сидорова',
+        guests: 2,
+        total: 1800,
+        items: [
+          { id: 5, name: 'Паста Карбонара', quantity: 2, price: 750 },
+          { id: 6, name: 'Сок апельсиновый', quantity: 2, price: 150 }
         ]
       }
     ]
@@ -385,6 +408,17 @@ export default {
       }
 
       return filtered
+    }
+  },
+
+  watch: {
+    '$route.query': {
+      immediate: true,
+      handler(query) {
+        if (query.status === 'completed' && query.message) {
+          this.showSnackbar(query.message)
+        }
+      }
     }
   },
 
@@ -456,6 +490,11 @@ export default {
     printOrder() {
       // Здесь будет логика печати заказа
       console.log('Печать заказа:', this.selectedOrder.id)
+    },
+
+    showSnackbar(text) {
+      this.snackbar.text = text
+      this.snackbar.show = true
     }
   }
 }
