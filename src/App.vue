@@ -76,42 +76,40 @@
       <v-spacer></v-spacer>
 
       <!-- Профиль -->
-      <v-menu offset-y transition="slide-y-transition">
-        <template #activator="{ on, attrs }">
-          <v-btn icon class="rounded-lg" v-bind="attrs" v-on="on">
-            <v-avatar size="32" color="#B85B3E">
-              <v-icon dark>mdi-account</v-icon>
+      <v-menu
+        offset-y
+        left
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            icon
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-avatar size="32">
+              <v-img src="https://cdn.vuetifyjs.com/images/john.jpg"></v-img>
             </v-avatar>
           </v-btn>
         </template>
-
-        <v-list dense class="rounded-lg">
-          <v-list-item link>
+        <v-list>
+          <v-list-item
+            to="/profile"
+          >
             <v-list-item-icon>
-              <v-icon>mdi-account-circle</v-icon>
+              <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Профиль</v-list-item-title>
+              <v-list-item-title>Личный кабинет</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-
-          <v-list-item link>
-            <v-list-item-icon>
-              <v-icon>mdi-cog</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Настройки</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-divider></v-divider>
-
-          <v-list-item link>
+          <v-list-item
+            @click="logout"
+          >
             <v-list-item-icon>
               <v-icon>mdi-logout</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Выход</v-list-item-title>
+              <v-list-item-title>Выйти</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
