@@ -70,22 +70,10 @@
       ></v-app-bar-nav-icon>
 
       <v-toolbar-title class="text-h6" style="color: #B85B3E; font-weight: 500;">
-  Система управления рестораном
-</v-toolbar-title>
+        Система управления рестораном
+      </v-toolbar-title>
 
       <v-spacer></v-spacer>
-
-      <!-- Поиск -->
-      <v-btn icon class="rounded-lg mr-2">
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <!-- Уведомления -->
-      <v-btn icon class="rounded-lg mr-2">
-        <v-badge dot color="error">
-          <v-icon>mdi-bell</v-icon>
-        </v-badge>
-      </v-btn>
 
       <!-- Профиль -->
       <v-menu offset-y transition="slide-y-transition">
