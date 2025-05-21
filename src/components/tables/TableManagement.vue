@@ -523,39 +523,29 @@ export default {
         areas: [
           { id: 'private', name: 'Приватная зона', class: 'private-area', layout: 'grid' }
         ]
-      },
-      {
-        id: 'smoking',
-        name: 'Зал для курящих',
-        icon: 'mdi-smoking',
-        capacity: 28,
-        features: ['smoking'],
-        hasBar: true,
-        barSeats: 5,
-        areas: [
-          { id: 'lounge', name: 'Лаунж-зона', class: 'lounge-area', layout: 'grid' }
-        ]
       }
     ],
     // Данные столов теперь организованы по залам
     tablesByHall: {
       main: [
-        // Существующие столы основного зала
+        { id: 1, number: 1, seats: 4, status: 'free', currentOrder: null, area: 'window' },
+        { id: 2, number: 2, seats: 4, status: 'occupied', currentOrder: { id: 101, total: 2800, guestCount: 3, startTime: new Date().getTime() - 1800000 }, area: 'window' },
+        { id: 3, number: 3, seats: 6, status: 'free', currentOrder: null, area: 'center' },
+        { id: 4, number: 4, seats: 8, status: 'occupied', currentOrder: { id: 102, total: 4500, guestCount: 6, startTime: new Date().getTime() - 3600000 }, area: 'center' },
+        { id: 5, number: 5, seats: 2, status: 'free', currentOrder: null, area: 'cozy' },
+        { id: 6, number: 6, seats: 4, status: 'closing', currentOrder: { id: 103, total: 3200, guestCount: 4, startTime: new Date().getTime() - 7200000 }, area: 'cozy' }
       ],
       veranda: [
-        { id: 101, number: 1, seats: 4, status: 'free', currentOrder: null, area: 'terrace' },
-        { id: 102, number: 2, seats: 4, status: 'occupied', currentOrder: { id: 201, total: 3100, guestCount: 3, startTime: new Date().getTime() - 2400000 }, area: 'terrace' },
-        // Добавьте больше столов для веранды
+        { id: 101, number: 1, seats: 4, status: 'free', currentOrder: null, area: 'terrace', shape: 'round' },
+        { id: 102, number: 2, seats: 4, status: 'occupied', currentOrder: { id: 201, total: 3100, guestCount: 3, startTime: new Date().getTime() - 2400000 }, area: 'terrace', shape: 'round' },
+        { id: 103, number: 3, seats: 6, status: 'free', currentOrder: null, area: 'terrace', shape: 'rectangular' },
+        { id: 104, number: 4, seats: 2, status: 'free', currentOrder: null, area: 'lounge', shape: 'round' },
+        { id: 105, number: 5, seats: 4, status: 'occupied', currentOrder: { id: 202, total: 2800, guestCount: 4, startTime: new Date().getTime() - 3600000 }, area: 'lounge', shape: 'booth' }
       ],
       vip: [
-        { id: 201, number: 1, seats: 6, status: 'free', currentOrder: null, area: 'private' },
-        { id: 202, number: 2, seats: 8, status: 'occupied', currentOrder: { id: 301, total: 12500, guestCount: 6, startTime: new Date().getTime() - 5400000 }, area: 'private' },
-        // Добавьте больше столов для VIP-зала
-      ],
-      smoking: [
-        { id: 301, number: 1, seats: 4, status: 'free', currentOrder: null, area: 'lounge' },
-        { id: 302, number: 2, seats: 4, status: 'occupied', currentOrder: { id: 401, total: 2800, guestCount: 4, startTime: new Date().getTime() - 3600000 }, area: 'lounge' },
-        // Добавьте больше столов для зала для курящих
+        { id: 201, number: 1, seats: 6, status: 'free', currentOrder: null, area: 'private', shape: 'rectangular' },
+        { id: 202, number: 2, seats: 8, status: 'occupied', currentOrder: { id: 301, total: 12500, guestCount: 6, startTime: new Date().getTime() - 5400000 }, area: 'private', shape: 'rectangular' },
+        { id: 203, number: 3, seats: 4, status: 'free', currentOrder: null, area: 'private', shape: 'round' }
       ]
     },
     showDialog: false,
