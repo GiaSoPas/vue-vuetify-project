@@ -4,7 +4,7 @@
     <v-row>
       <!-- Основная информация -->
       <v-col cols="12" md="4">
-        <v-card>
+        <v-card class="mb-4">
           <v-card-title class="d-flex align-center">
             <v-avatar size="64" class="mr-4">
               <v-img :src="user.avatar || 'https://cdn.vuetifyjs.com/images/john.jpg'"></v-img>
@@ -51,17 +51,16 @@
         </v-card>
       </v-col>
 
-      <!-- Статистика и действия -->
+      <!-- Статистика -->
       <v-col cols="12" md="8">
-        <!-- Статистика -->
-        <v-card class="mb-4">
+        <v-card>
           <v-card-title class="d-flex align-center">
             <v-icon color="primary" class="mr-2">mdi-chart-line</v-icon>
             Статистика
           </v-card-title>
           <v-card-text>
             <v-row>
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6">
                 <v-hover v-slot="{ hover }">
                   <v-card
                     :elevation="hover ? 8 : 2"
@@ -92,7 +91,7 @@
                 </v-hover>
               </v-col>
 
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6">
                 <v-hover v-slot="{ hover }">
                   <v-card
                     :elevation="hover ? 8 : 2"
@@ -123,7 +122,7 @@
                 </v-hover>
               </v-col>
 
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6">
                 <v-hover v-slot="{ hover }">
                   <v-card
                     :elevation="hover ? 8 : 2"
@@ -154,7 +153,7 @@
                 </v-hover>
               </v-col>
 
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" sm="6">
                 <v-hover v-slot="{ hover }">
                   <v-card
                     :elevation="hover ? 8 : 2"
@@ -184,116 +183,6 @@
                   </v-card>
                 </v-hover>
               </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-
-        <!-- Действия -->
-        <v-card>
-          <v-card-title>Действия</v-card-title>
-          <v-card-text>
-            <v-row>
-              <!-- Для администратора -->
-              <template v-if="user.role === 'admin'">
-                <v-col cols="12" sm="6" md="4">
-                  <v-btn
-                    block
-                    color="primary"
-                    @click="$router.push('/users')"
-                  >
-                    <v-icon left>mdi-account-group</v-icon>
-                    Управление пользователями
-                  </v-btn>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-btn
-                    block
-                    color="primary"
-                    @click="$router.push('/menu')"
-                  >
-                    <v-icon left>mdi-food</v-icon>
-                    Управление меню
-                  </v-btn>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-btn
-                    block
-                    color="primary"
-                    @click="$router.push('/reports')"
-                  >
-                    <v-icon left>mdi-chart-bar</v-icon>
-                    Отчеты
-                  </v-btn>
-                </v-col>
-              </template>
-
-              <!-- Для официанта -->
-              <template v-if="user.role === 'waiter'">
-                <v-col cols="12" sm="6" md="4">
-                  <v-btn
-                    block
-                    color="primary"
-                    @click="$router.push('/orders')"
-                  >
-                    <v-icon left>mdi-receipt</v-icon>
-                    Мои заказы
-                  </v-btn>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-btn
-                    block
-                    color="primary"
-                    @click="$router.push('/tables')"
-                  >
-                    <v-icon left>mdi-table-furniture</v-icon>
-                    Столики
-                  </v-btn>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-btn
-                    block
-                    color="primary"
-                    @click="$router.push('/schedule')"
-                  >
-                    <v-icon left>mdi-calendar</v-icon>
-                    График работы
-                  </v-btn>
-                </v-col>
-              </template>
-
-              <!-- Для повара -->
-              <template v-if="user.role === 'cook'">
-                <v-col cols="12" sm="6" md="4">
-                  <v-btn
-                    block
-                    color="primary"
-                    @click="$router.push('/kitchen')"
-                  >
-                    <v-icon left>mdi-food</v-icon>
-                    Кухня
-                  </v-btn>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-btn
-                    block
-                    color="primary"
-                    @click="$router.push('/inventory')"
-                  >
-                    <v-icon left>mdi-package-variant</v-icon>
-                    Склад
-                  </v-btn>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-btn
-                    block
-                    color="primary"
-                    @click="$router.push('/schedule')"
-                  >
-                    <v-icon left>mdi-calendar</v-icon>
-                    График работы
-                  </v-btn>
-                </v-col>
-              </template>
             </v-row>
           </v-card-text>
         </v-card>

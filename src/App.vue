@@ -163,7 +163,13 @@ export default {
         to: '/kitchen'
       }
     ]
-  })
+  }),
+  methods: {
+    logout() {
+      // Здесь будет логика выхода
+      this.$router.push('/login')
+    }
+  }
 }
 </script>
 

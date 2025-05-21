@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Dashboard from '@/views/Dashboard.vue'
 import Profile from '../views/Profile.vue'
+import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
 
 Vue.use(VueRouter)
 
@@ -48,6 +50,16 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
   }
 ]
 
