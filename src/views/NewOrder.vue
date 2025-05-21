@@ -19,7 +19,43 @@
               outlined
               dense
               class="rounded-lg"
-            ></v-select>
+              :loading="loadingTables"
+              :error-messages="tablesError"
+            >
+              <template v-slot:selection="{ item }">
+                <div class="d-flex align-center">
+                  <v-icon
+                    :color="item.statusColor"
+                    class="mr-2"
+                  >
+                    mdi-circle
+                  </v-icon>
+                  {{ item.name }}
+                  <span class="ml-2 grey--text text-caption">
+                    ({{ item.capacity }} мест, {{ item.location }})
+                  </span>
+                </div>
+              </template>
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title class="d-flex align-center">
+                    <v-icon
+                      :color="item.statusColor"
+                      class="mr-2"
+                    >
+                      mdi-circle
+                    </v-icon>
+                    {{ item.name }}
+                    <span class="ml-2 grey--text text-caption">
+                      ({{ item.capacity }} мест, {{ item.location }})
+                    </span>
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    {{ item.status }}
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </template>
+            </v-select>
 
             <v-text-field
               v-model="guestCount"
@@ -117,7 +153,38 @@
                   outlined
                   dense
                   class="rounded-lg"
-                ></v-select>
+                  item-text="name"
+                  item-value="id"
+                  :loading="loadingCategories"
+                  :error-messages="categoriesError"
+                >
+                  <template v-slot:selection="{ index }">
+                    <v-chip
+                      v-if="index === 0"
+                      :color="selectedCategories.length === categories.length ? 'success' : 'primary'"
+                      text-color="white"
+                      class="mr-2"
+                    >
+                      {{ selectedCategories.length === categories.length ? 'Все категории' : `${selectedCategories.length} выбрано` }}
+                    </v-chip>
+                  </template>
+                  <template v-slot:prepend-item>
+                    <v-list-item
+                      @click="toggleAllCategories"
+                    >
+                      <v-list-item-action>
+                        <v-checkbox
+                          :input-value="selectedCategories.length === categories.length"
+                          :indeterminate="selectedCategories.length > 0 && selectedCategories.length < categories.length"
+                        ></v-checkbox>
+                      </v-list-item-action>
+                      <v-list-item-content>
+                        <v-list-item-title>Все категории</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-divider class="mt-2"></v-divider>
+                  </template>
+                </v-select>
               </v-col>
             </v-row>
           </v-card-text>
@@ -131,7 +198,7 @@
             class="rounded-t-lg"
           >
             <v-tab
-              v-for="category in categories"
+              v-for="category in filteredCategories"
               :key="category.id"
               class="text-none"
             >
@@ -143,7 +210,7 @@
 
           <v-tabs-items v-model="activeTab">
             <v-tab-item
-              v-for="category in categories"
+              v-for="category in filteredCategories"
               :key="category.id"
             >
               <v-container fluid class="pa-4">
@@ -272,6 +339,8 @@
 </template>
 
 <script>
+import { menuApi, orderApi, tableApi } from '@/services/api'
+
 export default {
   name: 'NewOrder',
 
@@ -286,39 +355,16 @@ export default {
     selectedCategories: [],
     showConfirmDialog: false,
 
-    // Тестовые данные
-    tables: [
-      { id: 1, name: 'Стол 1' },
-      { id: 2, name: 'Стол 2' },
-      { id: 3, name: 'Стол 3' },
-      { id: 4, name: 'Стол 4' }
-    ],
-
-    categories: [
-      { id: 1, name: 'Салаты' },
-      { id: 2, name: 'Супы' },
-      { id: 3, name: 'Горячее' },
-      { id: 4, name: 'Напитки' }
-    ],
-
-    menuItems: [
-      {
-        id: 1,
-        name: 'Цезарь с курицей',
-        description: 'Классический салат с куриным филе',
-        price: 590,
-        categoryId: 1,
-        available: true
-      },
-      {
-        id: 2,
-        name: 'Борщ',
-        description: 'Традиционный борщ со сметаной',
-        price: 420,
-        categoryId: 2,
-        available: true
-      }
-    ],
+    // Данные из API
+    categories: [],
+    menuItems: [],
+    tables: [],
+    loadingCategories: false,
+    loadingMenu: false,
+    loadingTables: false,
+    categoriesError: null,
+    menuError: null,
+    tablesError: null,
 
     orderItems: []
   }),
@@ -330,6 +376,16 @@ export default {
 
     canCreateOrder() {
       return this.selectedTable && this.orderItems.length > 0
+    },
+
+    // Отфильтрованные категории для табов
+    filteredCategories() {
+      if (!this.selectedCategories.length) {
+        return this.categories // если ничего не выбрано, показываем все
+      }
+      return this.categories.filter(category => 
+        this.selectedCategories.includes(category.id)
+      )
     }
   },
 
@@ -339,6 +395,46 @@ export default {
         style: 'currency',
         currency: 'RUB'
       }).format(value)
+    },
+
+    // Загрузка категорий
+    async loadCategories() {
+      this.loadingCategories = true
+      this.categoriesError = null
+      try {
+        const response = await menuApi.getCategories()
+        this.categories = response.data.categories
+        // По умолчанию выбираем все категории
+        this.selectedCategories = this.categories.map(cat => cat.id)
+      } catch (error) {
+        console.error('Ошибка загрузки категорий:', error)
+        this.categoriesError = 'Не удалось загрузить категории'
+      } finally {
+        this.loadingCategories = false
+      }
+    },
+
+    // Загрузка блюд
+    async loadMenuItems() {
+      this.loadingMenu = true
+      this.menuError = null
+      try {
+        const params = {}
+        if (this.selectedCategories && this.selectedCategories.length > 0) {
+          params.categoryId = this.selectedCategories // отправляем один ID категории
+        }
+        if (this.search) {
+          params.search = this.search
+        }
+        
+        const response = await menuApi.getMenuItems(params)
+        this.menuItems = response.data.items || []
+      } catch (error) {
+        console.error('Ошибка загрузки меню:', error)
+        this.menuError = 'Не удалось загрузить меню'
+      } finally {
+        this.loadingMenu = false
+      }
     },
 
     filteredItems(categoryId) {
@@ -366,10 +462,68 @@ export default {
       this.showConfirmDialog = true
     },
 
-    confirmOrder() {
-      // здесь будет отправка заказа на сервер
-      this.showConfirmDialog = false
-      this.$router.push('/orders')
+    async confirmOrder() {
+      try {
+        const orderData = {
+          tableId: this.selectedTable,
+          guestCount: this.guestCount,
+          customerName: this.customerName,
+          customerPhone: this.customerPhone,
+          comment: this.comment,
+          items: this.orderItems.map(item => ({
+            menuItemId: item.id,
+            quantity: item.quantity
+          }))
+        }
+
+        await orderApi.createOrder(orderData)
+        this.showConfirmDialog = false
+        this.$router.push('/orders')
+      } catch (error) {
+        console.error('Ошибка создания заказа:', error)
+        // Здесь можно добавить показ ошибки пользователю
+      }
+    },
+
+    toggleAllCategories() {
+      if (this.selectedCategories.length === this.categories.length) {
+        this.selectedCategories = []
+      } else {
+        this.selectedCategories = this.categories.map(cat => cat.id)
+      }
+      this.loadMenuItems()
+    },
+
+    // Загрузка столов
+    async loadTables() {
+      this.loadingTables = true
+      this.tablesError = null
+      try {
+        const response = await tableApi.getTables()
+        this.tables = response.data
+      } catch (error) {
+        console.error('Ошибка загрузки столов:', error)
+        this.tablesError = 'Не удалось загрузить список столов'
+      } finally {
+        this.loadingTables = false
+      }
+    }
+  },
+
+  // Загрузка данных при создании компонента
+  created() {
+    this.loadCategories()
+    this.loadMenuItems()
+    this.loadTables()
+  },
+
+  // Следим за изменениями фильтров
+  watch: {
+    search() {
+      this.loadMenuItems()
+    },
+    selectedCategories() {
+      this.loadMenuItems()
     }
   }
 }

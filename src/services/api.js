@@ -5,9 +5,9 @@ const api = axios.create({
 })
 
 export const menuApi = {
-  // Categories
+  // Получение категорий
   getCategories() {
-    return api.get('/menu/categories')
+    return api.get('/Menu/categories')
   },
 
   createCategory(category) {
@@ -22,9 +22,9 @@ export const menuApi = {
     return api.delete(`/menu/categories/${id}`)
   },
 
-  // Menu Items
+  // Получение блюд
   getMenuItems(params = {}) {
-    return api.get('/menu/items', { params })
+    return api.get('/Menu/items', { params })
   },
 
   createMenuItem(item) {
@@ -71,6 +71,19 @@ export const menuApi = {
         'Content-Type': 'multipart/form-data'
       }
     })
+  }
+}
+
+export const orderApi = {
+  // Создание заказа
+  createOrder(orderData) {
+    return api.post('/Orders', orderData)
+  }
+}
+
+export const tableApi = {
+  getTables() {
+    return api.get('/Tables')
   }
 }
 
