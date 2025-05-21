@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col v-for="item in items" :key="item.id" cols="12" sm="6" md="4">
-      <v-card class="menu-item">
+      <v-card class="menu-item rounded-lg">
         <v-img
           :src="getImageUrl(item.image)"
           height="200"
@@ -13,16 +13,12 @@
 
         <v-card-text>
           <div class="mb-2">{{ item.description }}</div>
-          <div class="text-h6 primary--text">₽{{ item.price.toLocaleString() }}</div>
+          <div class="text-h6 price-text">₽{{ item.price.toLocaleString() }}</div>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            text
-            @click="$emit('add-to-order', item)"
-          >
+          <v-btn text plain class="add-button">
             <v-icon left>mdi-plus</v-icon>
             Добавить
           </v-btn>
@@ -43,11 +39,11 @@ export default {
   },
   methods: {
     getImageUrl(image) {
-      // В реальном приложении здесь будет логика получения URL изображения
-      return `https://via.placeholder.com/400x200?text=${image}`
+      // Здесь будет логика получения реального URL изображения
+      return `https://via.placeholder.com/400x200?text= ${image}`;
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -55,9 +51,34 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #b08f42;
+  border: 1px solid #B85B3E; /* Теперь цвет границы применяется */
+  transition: all 0.3s ease;
+}
+
+.menu-item:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 .menu-item .v-card__text {
   flex-grow: 1;
+  background-color: #f8f7f4;
+  padding: 16px;
 }
-</style> 
+
+.menu-item .v-card__actions {
+  background-color: #c4b93d;
+  padding: 16px;
+}
+
+/* Цвет цены */
+.price-text {
+  color: #A8763E !important;
+}
+
+/* Цвет кнопки */
+.add-button {
+  color: #B85B3E !important;
+}
+</style>

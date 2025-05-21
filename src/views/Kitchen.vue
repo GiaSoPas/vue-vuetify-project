@@ -221,7 +221,7 @@ export default {
       {
         id: 1001,
         table: 1,
-        createdAt: '2024-03-16T14:30:00',
+        createdAt: '2025-03-16T14:30:00',
         items: [
           {
             id: 1,
@@ -229,7 +229,7 @@ export default {
             name: 'Цезарь с курицей',
             cookingTime: 15,
             status: 'waiting',
-            createdAt: '2024-03-16T14:30:00'
+            createdAt: '2025-03-16T14:30:00'
           },
           {
             id: 2,
@@ -237,14 +237,14 @@ export default {
             name: 'Борщ',
             cookingTime: 30,
             status: 'preparing',
-            createdAt: '2024-03-16T14:30:00'
+            createdAt: '2025-03-16T14:30:00'
           }
         ]
       },
       {
         id: 1002,
         table: 3,
-        createdAt: '2024-03-16T14:45:00',
+        createdAt: '2025-03-16T14:45:00',
         items: [
           {
             id: 3,
@@ -276,7 +276,7 @@ export default {
     // Обновление данных
     refreshOrders() {
       this.loading = true
-      // В реальном приложении здесь будет запрос к API
+      //  здесь будет запрос к API
       setTimeout(() => {
         this.loading = false
       }, 1000)

@@ -88,9 +88,9 @@ export default {
 
   methods: {
     getTableColor(table) {
-      if (!table.available) return 'red'
-      if (this.value === table.id) return 'success'
-      return 'primary'
+      if (!table.available) return '#C69C6D'
+      if (this.value === table.id) return '#8EAB87'
+      return '#B85B3E'
     },
     selectTable(table) {
       if (!table.available) return
@@ -111,23 +111,29 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 16px;
   padding: 16px;
-  background-color: #f5f5f5;
+  background-color: #f8f7f4;
   border-radius: 8px;
 }
 
 .table-btn {
   height: 100px !important;
   width: 100% !important;
+  border-radius: 12px !important;
+  transition: transform 0.2s ease;
+}
+
+.table-btn:hover {
+  transform: scale(1.03);
 }
 
 .table-btn.red {
-  background-color: #FF5252 !important;
+  background-color: #C69C6D !important;
   color: white !important;
 }
 
-.table-btn.red:disabled {
-  background-color: #FF5252 !important;
-  opacity: 1 !important;
+.table-btn.green {
+  background-color: #8EAB87 !important;
+  color: white !important;
 }
 
 .table-content {
@@ -164,18 +170,18 @@ export default {
 }
 
 .legend-color.primary {
-  background-color: var(--v-primary-base);
+  background-color: #B85B3E;
 }
 
 .legend-color.red {
-  background-color: #FF5252;
+  background-color: #C69C6D;
 }
 
 .legend-color.success {
-  background-color: var(--v-success-base);
+  background-color: #8EAB87;
 }
 
 .layout-legend span {
   color: rgba(0, 0, 0, 0.87);
 }
-</style> 
+</style>

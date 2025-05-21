@@ -1,64 +1,62 @@
 <template>
-  <v-app>
+  <v-app :style="{ backgroundColor: '#F8F7F4', fontFamily: 'Roboto, sans-serif' }">
     <!-- Боковое меню -->
     <v-navigation-drawer
       v-model="drawer"
       app
-      :mini-variant="mini"
+      :mini-variant.sync="mini"
       class="elevation-3"
-      :color="$vuetify.theme.themes.light.background"
+      :color="'#fff'"
     >
-      <!-- Заголовок меню -->
-      <v-list-item class="px-4 py-3">
+      <!-- Заголовок ресторана -->
+      <v-list-item class="px-4 py-5">
+        <v-list-item-icon>
+          <v-icon color="#B85B3E">mdi-silverware</v-icon>
+        </v-list-item-icon>
+
         <v-list-item-content>
-          <v-list-item-title class="text-h6 primary--text">
+          <v-list-item-title class="text-h6" style="color: #B85B3E; font-weight: 500;">
             Ресторан
           </v-list-item-title>
-          <v-list-item-subtitle class="text-subtitle-2 grey--text">
+          <v-list-item-subtitle class="grey--text text--darken-1" style="color: #fff !important;">
             Система управления
           </v-list-item-subtitle>
         </v-list-item-content>
-        <v-btn
-          icon
-          @click.stop="mini = !mini"
-        >
+
+        <!-- Кнопка сворачивания -->
+        <v-btn icon @click.stop="mini = !mini">
           <v-icon>{{ mini ? 'mdi-chevron-right' : 'mdi-chevron-left' }}</v-icon>
         </v-btn>
       </v-list-item>
 
       <v-divider></v-divider>
 
-      <!-- Пункты меню -->
-      <v-list
-        dense
-        nav
-        class="py-0"
-      >
+      <v-list dense nav class="py-0">
         <v-list-item
           v-for="item in menuItems"
           :key="item.title"
           :to="item.to"
           link
-          class="mb-1"
-          :class="{'rounded-lg': true}"
+          class="mb-1 rounded-lg"
         >
           <v-list-item-icon>
-            <v-icon :color="$route.path === item.to ? 'primary' : 'grey'">
+            <v-icon :color="$route.path === item.to ? '#B85B3E' : 'grey darken-2'">
               {{ item.icon }}
             </v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
             <v-list-item-title
-              :class="$route.path === item.to ? 'primary--text font-weight-medium' : ''"
+              :class="$route.path === item.to ? 'primary--text font-weight-medium' : 'grey--text text--darken-2'"
             >
               {{ item.title }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
-    </v-navigation-drawer>
 
+      <v-divider></v-divider>
+    </v-navigation-drawer>
     <!-- Верхняя панель -->
     <v-app-bar
       app
@@ -70,59 +68,36 @@
         @click.stop="drawer = !drawer"
         class="rounded-lg"
       ></v-app-bar-nav-icon>
-      
-      <v-toolbar-title class="text-h6 primary--text font-weight-medium">
-        Система управления рестораном
-      </v-toolbar-title>
+
+      <v-toolbar-title class="text-h6" style="color: #B85B3E; font-weight: 500;">
+  Система управления рестораном
+</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
       <!-- Поиск -->
-      <v-btn
-        icon
-        class="rounded-lg mr-2"
-      >
+      <v-btn icon class="rounded-lg mr-2">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
       <!-- Уведомления -->
-      <v-btn
-        icon
-        class="rounded-lg mr-2"
-      >
-        <v-badge
-          dot
-          color="error"
-        >
+      <v-btn icon class="rounded-lg mr-2">
+        <v-badge dot color="error">
           <v-icon>mdi-bell</v-icon>
         </v-badge>
       </v-btn>
 
       <!-- Профиль -->
-      <v-menu
-        offset-y
-        transition="slide-y-transition"
-      >
+      <v-menu offset-y transition="slide-y-transition">
         <template #activator="{ on, attrs }">
-          <v-btn
-            icon
-            class="rounded-lg"
-            v-bind="attrs"
-            v-on="on"
-          >
-            <v-avatar
-              size="32"
-              color="primary"
-            >
+          <v-btn icon class="rounded-lg" v-bind="attrs" v-on="on">
+            <v-avatar size="32" color="#B85B3E">
               <v-icon dark>mdi-account</v-icon>
             </v-avatar>
           </v-btn>
         </template>
 
-        <v-list
-          dense
-          class="rounded-lg"
-        >
+        <v-list dense class="rounded-lg">
           <v-list-item link>
             <v-list-item-icon>
               <v-icon>mdi-account-circle</v-icon>
@@ -212,35 +187,39 @@ export default {
 }
 
 .main-content {
-  background-color: var(--v-background-base);
+  background-color: #F8F7F4;
 }
 
-/* Стили для скругленных углов */
 .rounded-lg {
   border-radius: 12px !important;
 }
 
-/* Анимация для бокового меню */
-.v-navigation-drawer {
-  transition: width 0.3s ease-out;
-}
-
-/* Стили для активного пункта меню */
+/* Активный пункт меню */
 .v-list-item--active {
-  background-color: var(--v-primary-lighten5) !important;
+  background-color: #FFF5EE !important;
+  border-left: 4px solid #B85B3E;
 }
 
-/* Стили для наведения на пункты меню */
+/* Эффект при наведении */
 .v-list-item:hover {
-  background-color: var(--v-primary-lighten5) !important;
+  background-color: #FFF5EE !important;
 }
 
-/* Тени для карточек */
+/* Тени для карточек и элементов */
 .v-card {
   transition: box-shadow 0.3s ease-in-out;
 }
 
 .v-card:hover {
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Иконки активного пункта меню */
+.v-list-item--active .v-icon,
+.v-list-item--active .v-list-item__title {
+  color: #B85B3E !important;
+}
+.v-navigation-drawer .v-list-item__icon {
+  margin-right: 16px;
 }
 </style>

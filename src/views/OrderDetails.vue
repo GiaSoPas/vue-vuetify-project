@@ -369,7 +369,7 @@ export default {
   name: 'OrderDetails',
 
   data: () => ({
-    // Данные заказа (в реальном приложении будут загружаться по ID)
+    // Данные заказа ( будут загружаться по ID)
     order: {
       id: 1001,
       table: 1,
@@ -527,12 +527,12 @@ export default {
     updateOrderStatus() {
       this.order.status = this.newStatus
       this.showStatusDialog = false
-      // В реальном приложении здесь будет API-запрос
+      //  здесь будет API-запрос
     },
 
     addItemToOrder() {
       const newOrderItem = {
-        id: Date.now(), // В реальном приложении ID будет приходить с сервера
+        id: Date.now(), //  ID будет приходить с сервера
         name: this.newItem.name,
         quantity: this.newItemQuantity,
         price: this.newItem.price,
@@ -542,11 +542,11 @@ export default {
       this.showAddItemDialog = false
       this.newItem = null
       this.newItemQuantity = 1
-      // В реальном приложении здесь будет API-запрос
+      //  здесь будет API-запрос
     },
 
     updateItemQuantity(item) {
-      // В реальном приложении здесь будет API-запрос
+      // здесь будет API-запрос
       console.log('Обновлено количество:', item)
     },
 
@@ -560,7 +560,7 @@ export default {
       if (this.selectedItem) {
         this.selectedItem.status = this.newItemStatus
         this.showItemStatusDialog = false
-        // В реальном приложении здесь будет API-запрос
+        //  здесь будет API-запрос
       }
     },
 
@@ -574,7 +574,7 @@ export default {
         const index = this.order.items.findIndex(item => item.id === this.itemToDelete.id)
         if (index !== -1) {
           this.order.items.splice(index, 1)
-          // В реальном приложении здесь будет API-запрос
+          //  здесь будет API-запрос
         }
       }
       this.showDeleteDialog = false
@@ -583,13 +583,13 @@ export default {
 
     finishOrder() {
       this.order.status = 'completed'
-      // В реальном приложении здесь будет API-запрос для закрытия заказа
+      //  здесь будет API-запрос для закрытия заказа
       this.$router.push('/orders')
     }
   },
 
   created() {
-    // В реальном приложении здесь будет загрузка данных заказа по ID из маршрута
+    // здесь будет загрузка данных заказа по ID из маршрута
     const orderId = this.$route.params.id
     console.log('Loading order:', orderId)
   }

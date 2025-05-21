@@ -1,20 +1,19 @@
 <template>
-  <div>
-    <v-tabs v-model="activeHall" background-color="primary" dark class="mb-4 hall-tabs" show-arrows>
+   <div>
+    <v-tabs v-model="activeHall" background-color="#B85B3E" dark class="mb-4 hall-tabs" show-arrows>
       <v-tab v-for="hall in halls" :key="hall.id">
         <v-icon left>{{ hall.icon }}</v-icon>
         {{ hall.name }}
         <v-badge
           :content="getActiveOrdersCount(hall.id)"
           :value="getActiveOrdersCount(hall.id)"
-          color="error"
+          color="#C06C3D"
           offset-x="10"
           offset-y="-8"
         ></v-badge>
       </v-tab>
     </v-tabs>
-
-    <v-tabs-items v-model="activeHall">
+     <v-tabs-items v-model="activeHall">
       <v-tab-item v-for="hall in halls" :key="hall.id">
         <div class="restaurant-layout">
           <div class="hall-info mb-4">
@@ -24,24 +23,20 @@
                 <v-icon left small>mdi-account-group</v-icon>
                 Вместимость: {{ hall.capacity }}
               </v-chip>
-              <v-chip small color="success" v-if="hall.features.includes('smoking')">
-                <v-icon left small>mdi-smoking</v-icon>
-                Для курящих
-              </v-chip>
-              <v-chip small color="primary" v-if="hall.features.includes('veranda')">
+              <v-chip small color="success" v-if="hall.features.includes('veranda')">
                 <v-icon left small>mdi-white-balance-sunny</v-icon>
                 Веранда
               </v-chip>
-              <v-chip small color="purple" v-if="hall.features.includes('vip')">
+              <v-chip small color="primary" v-if="hall.features.includes('vip')">
                 <v-icon left small>mdi-star</v-icon>
                 VIP-зал
               </v-chip>
               <v-spacer></v-spacer>
               <v-btn
                 small
-                :color="isEditMode ? 'success' : 'primary'"
+                :color="isEditMode ? 'success' : '#B85B3E'"
                 @click="toggleEditMode"
-                class="ml-2"
+                class="ml-2 text-capitalize"
               >
                 <v-icon left small>{{ isEditMode ? 'mdi-check' : 'mdi-pencil' }}</v-icon>
                 {{ isEditMode ? 'Завершить' : 'Редактировать' }}
@@ -59,15 +54,15 @@
                 </div>
               </transition>
             </template>
-            <!-- Содержимое зала остается прежним, но теперь использует данные конкретного зала -->
-            <template v-if="currentHall">
-              <!-- Барная зона (если есть) -->
-              <div v-if="currentHall.hasBar" class="area bar-area">
+
+            <!-- Барная зона -->
+            <template v-if="currentHall.hasBar">
+              <div class="area bar-area">
                 <div class="area-label">
                   <v-icon left>mdi-glass-cocktail</v-icon>
                   Барная зона
                 </div>
-                <div class="bar-section">
+               <div class="bar-section">
                   <div class="bar-counter">
                     <div class="bar-counter-decoration"></div>
                     <div class="bar-seats">
@@ -94,41 +89,25 @@
                       :class="['table-btn', getTableClass(table, area), `status-${table.status}`]"
                       @click="showTableDetails(table)"
                     >
-                      <div class="table-content">
+                       <div class="table-content">
                         <div class="table-shape bar-table-shape">
                           <div class="table-number">{{ table.number }}</div>
                           <div class="seats-layout" :class="table.shape || 'round'">
                             <template v-if="table.shape === 'rectangular'">
                               <div class="seats-row top">
-                                <v-icon v-for="n in getTopSeatsCount(table.seats)" 
-                                  :key="'top'+n" 
-                                  small 
-                                  class="seat-icon"
-                                >mdi-seat</v-icon>
+                                <v-icon v-for="n in getTopSeatsCount(table.seats)" :key="'top'+n" small class="seat-icon">mdi-seat</v-icon>
                               </div>
                               <div class="seats-sides">
                                 <div class="seats-left">
-                                  <v-icon v-for="n in getSideSeatsCount(table.seats)" 
-                                    :key="'left'+n" 
-                                    small 
-                                    class="seat-icon"
-                                  >mdi-seat</v-icon>
+                                  <v-icon v-for="n in getSideSeatsCount(table.seats)" :key="'left'+n" small class="seat-icon">mdi-seat</v-icon>
                                 </div>
                                 <div class="table-center">{{ table.seats }} мест</div>
                                 <div class="seats-right">
-                                  <v-icon v-for="n in getSideSeatsCount(table.seats)" 
-                                    :key="'right'+n" 
-                                    small 
-                                    class="seat-icon"
-                                  >mdi-seat</v-icon>
+                                  <v-icon v-for="n in getSideSeatsCount(table.seats)" :key="'right'+n" small class="seat-icon">mdi-seat</v-icon>
                                 </div>
                               </div>
                               <div class="seats-row bottom">
-                                <v-icon v-for="n in getTopSeatsCount(table.seats)" 
-                                  :key="'bottom'+n" 
-                                  small 
-                                  class="seat-icon"
-                                >mdi-seat</v-icon>
+                                <v-icon v-for="n in getTopSeatsCount(table.seats)" :key="'bottom'+n" small class="seat-icon">mdi-seat</v-icon>
                               </div>
                             </template>
 
@@ -419,10 +398,9 @@
               v-model.number="newTable.number"
               label="Номер столика"
               type="number"
-              :rules="[v => !!v || 'Обязательное поле', v => !isTableNumberExists(v) || 'Такой номер уже существует']"
+              :rules="[v => !!v || 'Обязательное поле', v => !isTableNumberExists(v) || 'Номер уже занят']"
               required
             ></v-text-field>
-
             <v-select
               v-model="newTable.seats"
               :items="[2, 4, 6, 8, 10]"
@@ -430,7 +408,6 @@
               required
               :rules="[v => !!v || 'Обязательное поле']"
             ></v-select>
-
             <v-select
               v-model="newTable.area"
               :items="currentHall.areas"
@@ -440,7 +417,6 @@
               required
               :rules="[v => !!v || 'Обязательное поле']"
             ></v-select>
-
             <v-select
               v-model="newTable.shape"
               :items="[
@@ -459,13 +435,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="showNewTableDialog = false">Отмена</v-btn>
-          <v-btn 
-            color="primary" 
-            @click="createNewTable"
-            :disabled="!isNewTableFormValid"
-          >
-            Создать
-          </v-btn>
+          <v-btn color="#B85B3E" @click="createNewTable" :disabled="!isNewTableFormValid">Создать</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="restaurant-cart">
     <div v-if="value.length === 0" class="text-center pa-4">
       <v-icon size="64" color="grey lighten-1">mdi-cart-outline</v-icon>
       <div class="text-h6 grey--text">Корзина пуста</div>
@@ -78,19 +78,49 @@ export default {
     updateQuantity(item, change) {
       const newQuantity = item.quantity + change
       if (newQuantity < 1) return
-      
-      const updatedItems = this.value.map(i => 
-        i.id === item.id 
+
+      const updatedItems = this.value.map(i =>
+        i.id === item.id
           ? { ...i, quantity: newQuantity }
           : i
       )
       this.$emit('input', updatedItems)
     },
-    
+
     removeItem(item) {
       const updatedItems = this.value.filter(i => i.id !== item.id)
       this.$emit('input', updatedItems)
     }
   }
 }
-</script> 
+</script>
+
+<style scoped>
+.restaurant-cart {
+  background-color: #f8f7f4;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.v-list-item__subtitle .v-btn {
+  background-color: #b85b3e !important;
+  color: white !important;
+}
+
+.v-list-item__subtitle .v-btn:hover {
+  background-color: #a55034 !important;
+}
+
+.v-list-item__action .v-btn {
+  background-color: #c06c3d !important;
+  color: white !important;
+}
+
+.v-text-field input {
+  font-size: 14px;
+}
+
+.v-text-field label {
+  font-size: 13px;
+}
+</style>

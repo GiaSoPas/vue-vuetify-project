@@ -367,7 +367,7 @@ export default {
     },
 
     confirmOrder() {
-      // В реальном приложении здесь будет отправка заказа на сервер
+      // здесь будет отправка заказа на сервер
       this.showConfirmDialog = false
       this.$router.push('/orders')
     }

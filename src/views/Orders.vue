@@ -326,7 +326,7 @@ export default {
       {
         id: 1001,
         table: 1,
-        createdAt: '2024-03-16T14:30:00',
+        createdAt: '2025-03-16T14:30:00',
         status: 'completed',
         total: 2450,
         waiter: 'Анна Петрова',
@@ -340,7 +340,7 @@ export default {
       {
         id: 1002,
         table: 3,
-        createdAt: '2024-03-16T15:00:00',
+        createdAt: '2025-03-16T15:00:00',
         status: 'in_progress',
         total: 3800,
         waiter: 'Иван Сидоров',

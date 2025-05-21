@@ -1,5 +1,5 @@
 <template>
-  <v-card class="elevation-2">
+  <v-card class="elevation-0 rounded-lg" style="background-color: #F8F7F4">
     <v-card-title class="d-flex justify-space-between align-center">
       Активные заказы
       <v-text-field
@@ -23,7 +23,8 @@
       no-data-text="Нет активных заказов"
       :items-per-page="5"
       class="elevation-0"
-    >
+  style="background-color: transparent"
+>
       <template #[`item.status`]="{ item }">
         <v-chip :color="getStatusColor(item.status)" small>
           {{ item.status }}
@@ -31,10 +32,10 @@
       </template>
 
       <template #[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="editOrder(item)">
+        <v-icon small color="primary" class="mr-2" @click="editOrder(item)">
           mdi-pencil
         </v-icon>
-        <v-icon small @click="viewDetails(item)">
+        <v-icon small color="info" @click="viewDetails(item)">
           mdi-eye
         </v-icon>
       </template>
@@ -86,13 +87,13 @@ export default {
   }),
   methods: {
     getStatusColor(status) {
-      switch (status) {
-        case 'Новый': return 'primary'
-        case 'Готовится': return 'warning'
-        case 'Подан': return 'success'
-        default: return 'grey'
-      }
-    },
+  switch (status) {
+    case 'Новый': return '#B85B3E'
+    case 'Готовится': return '#C69C6D'
+    case 'Подан': return '#7A9474'
+    default: return '#9E9E9E'
+  }
+},
     editOrder(item) {
       console.log('Edit order:', item)
       // Здесь будет логика редактирования заказа

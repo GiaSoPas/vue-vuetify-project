@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Система управления рестораном на Vue.js и Vuetify",
-  "author": "Your Name",
+  "author": "Диана",
   "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
